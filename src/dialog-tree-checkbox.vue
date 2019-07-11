@@ -116,7 +116,8 @@ export default {
   methods: {
     init() {
       this.getTree()
-      this.getCheckbox(false)
+      let checkedTreeKeys = _.uniq(_.map(this.selectedDy, 'categoryId'))
+      this.getCheckbox(checkedTreeKeys, false)
     },
     // ----弹框相关方法-----------start------------------------
     /** 弹框打开后*/
@@ -157,7 +158,8 @@ export default {
       this.checkbox.checkAll = false
       this.checkbox.isIndeterminate = false
 
-      await this.getCheckbox(true)
+      let checkedNotChildKeys = this.$refs.tree.getCheckedKeys(true)
+      await this.getCheckbox(checkedNotChildKeys, true)
     },
     /** tree-设置选中的tree*/
     setCheckedTree() {
@@ -169,15 +171,14 @@ export default {
     },
 
     // ----右侧(树形模块)方法-----------start---------------------
-    async getCheckbox(isRefresh = false) {
+    async getCheckbox(ids = [], isRefresh = false) {
       if (!isRefresh && this.checkbox.isRequested) {
         return
       }
-      let checkedTreeKeys = _.uniq(_.map(this.selectedDy, 'categoryId'))
-      if (!checkedTreeKeys || checkedTreeKeys.length == 0) {
+      if (ids.length == 0) {
         return
       }
-      let idsStr = checkedTreeKeys.join(',')
+      let idsStr = ids.join(',')
       let {data} = await this.$axios.get(
         `${this.checkboxConfig.url}?categoryId=${idsStr}`
       )
