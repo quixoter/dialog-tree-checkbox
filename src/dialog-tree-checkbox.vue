@@ -44,6 +44,8 @@
     </div>
 
     <span slot="footer" class="dialog-footer">
+      <span class="selected-current">选中{{ selectedDy.length }}个</span>
+
       <el-button size="mini" @click="close">取 消</el-button>
       <el-button size="mini" type="primary" @click="confirm">确 定</el-button>
     </span>
@@ -112,17 +114,15 @@ export default {
     }
   },
   methods: {
+    init() {
+      this.getTree()
+      this.getCheckbox(false)
+    },
     // ----弹框相关方法-----------start------------------------
     /** 弹框打开后*/
     dialogOpened() {
       this.opened()
-
-      this.getTree()
-
-      let checkedTreeKeys = _.uniq(_.map(this.selectedDy, 'categoryId'))
-      if (checkedTreeKeys.length > 0) {
-        this.getCheckbox(checkedTreeKeys, false)
-      }
+      this.init()
     },
     /** 关闭弹框*/
     close() {
@@ -160,11 +160,7 @@ export default {
       this.checkbox.checkAll = false
       this.checkbox.isIndeterminate = false
 
-      let checkedNotChildKeys = this.$refs.tree.getCheckedKeys(true)
-      if (checkedNotChildKeys.length == 0) {
-        return
-      }
-      await this.getCheckbox(checkedNotChildKeys, true)
+      await this.getCheckbox(true)
     },
     /** tree-设置选中的tree*/
     setCheckedTree() {
@@ -176,17 +172,15 @@ export default {
     },
 
     // ----右侧(树形模块)方法-----------start---------------------
-    async getCheckbox(ids, isRefresh = false) {
+    async getCheckbox(isRefresh = false) {
       if (!isRefresh && this.checkbox.isRequested) {
         return
       }
-      let idsStr = ''
-      if (typeof ids == 'string') {
-        idsStr = ids
+      let checkedTreeKeys = _.uniq(_.map(this.selectedDy, 'categoryId'))
+      if (!checkedTreeKeys || checkedTreeKeys.length == 0) {
+        return
       }
-      if (Array.isArray(ids)) {
-        idsStr = ids.join(',')
-      }
+      let idsStr = checkedTreeKeys.join(',')
       let {data} = await this.$axios.get(
         `${this.checkboxConfig.url}?categoryId=${idsStr}`
       )

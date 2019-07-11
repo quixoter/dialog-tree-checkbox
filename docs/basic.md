@@ -9,7 +9,7 @@
         :key="index" 
         v-for="(item,index) in selected"
       >
-        id:{{item.id}}, name:{{item.name}}
+        <span>id:{{item.id}}, </span><span>name:{{item.name}}  </span><a @click="del(index)">删除</a>
       </p>
       
       <dialog-tree-checkbox
@@ -40,6 +40,9 @@ export default {
   methods: {
     select(){
       this.visible = true
+    },
+    del(index){
+      this.selected.splice(index, 1)
     },
     handSelect(val){
       this.selected = val
