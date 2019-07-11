@@ -237,6 +237,7 @@ export default {
     selected: {
       handler(val) {
         this.selectedDy = val
+        this.setCheckedCheckbox()
       },
       deep: true,
       immediate: true
