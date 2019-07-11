@@ -131,7 +131,6 @@ export default {
     },
     /** 确定*/
     confirm() {
-      this.setSelectedDy()
       /** 确定选择*/
       this.$emit('handSelect', this.selectedDy)
       this.close()
@@ -153,8 +152,6 @@ export default {
     },
     /** 当复选框被点击的时候触发*/
     async treeCheck() {
-      this.setSelectedDy()
-
       // 清空checkbox数据
       this.checkbox.list = []
       this.checkbox.checkAll = false
@@ -195,6 +192,7 @@ export default {
     handleCheckAllChange(val) {
       this.checkbox.checkedKeys = val ? _.map(this.checkbox.list, 'id') : []
       this.checkbox.isIndeterminate = false
+      this.setSelectedDy()
     },
     /** checkbox-当绑定值变化时触发的事件*/
     handleCheckedChange(value) {
@@ -202,6 +200,7 @@ export default {
       this.checkbox.checkAll = checkedCount === this.checkbox.list.length
       this.checkbox.isIndeterminate =
         checkedCount > 0 && checkedCount < this.checkbox.list.length
+      this.setSelectedDy()
     },
     /** 设置组件中选择的数据selectedDy*/
     setSelectedDy() {
