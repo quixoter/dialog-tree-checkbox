@@ -5,9 +5,9 @@ module.exports = api => {
       [
         '@babel/transform-runtime',
         {
-          regenerator: true,
+          regenerator: true
           // https://babeljs.io/docs/en/babel-plugin-transform-runtime#absoluteruntime
-          absoluteRuntime: true
+          // absoluteRuntime: true
         }
       ]
     ]

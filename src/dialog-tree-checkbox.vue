@@ -53,6 +53,14 @@
 </template>
 
 <script>
+import {
+  Dialog as ElDialog,
+  Tree as ElTree,
+  Checkbox as ElCheckbox,
+  CheckboxGroup as ElCheckboxGroup,
+  Tooltip as ElTooltip,
+  Button as ElButton
+} from 'element-ui'
 import _ from 'lodash'
 import {
   compareRow,
@@ -66,6 +74,14 @@ import {DIALOG_CONFIG_DEFAULT} from './config.js'
 export default {
   name: 'DialogTreeCheckbox',
   inheritAttrs: false,
+  components: {
+    ElDialog,
+    ElTree,
+    ElCheckbox,
+    ElCheckboxGroup,
+    ElTooltip,
+    ElButton
+  },
   props: {
     /** 弹框打开后执行 */
     opened: {type: Function, required: false, default: () => {}},
@@ -179,9 +195,10 @@ export default {
         return
       }
       let idsStr = ids.join(',')
-      let {data} = await this.$axios.get(
-        `${this.checkboxConfig.url}?categoryId=${idsStr}`
-      )
+      let requestParam = {categoryId: idsStr}
+      let {data} = await this.$axios.get(`${this.checkboxConfig.url}`, {
+        params: requestParam
+      })
       if (data.code != '0') {
         return
       }
